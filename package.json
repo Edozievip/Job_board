@@ -1,0 +1,16 @@
+{
+  "name": "job_board",
+  "version": "1.0.0",
+  "description": "A community for vendors to meet with customers",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Edozievip",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "mongoose": "^8.0.3"
+  }
+}

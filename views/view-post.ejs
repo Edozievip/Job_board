@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>post blog</title>
+    <link rel="stylesheet" href="css/view.css" />
+
+     <!-- bootstrap links -->
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/bootstrap-grid.min.css">
+  <link rel="stylesheet" href="css/bootstrap-utilities.css">
+
+  <style>
+    .footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: rgb(233, 221, 221);
+  color: black;
+  text-align: center;
+    }
+  </style>
+  </head>
+  <body>
+
+    <!-- nav section -->
+  <nav class="navbar navbar-expand-lg bg-body-tertiary pb-0">
+    <div class="container-fluid pt-2 pb-2"  style="background-color: #4ac8fb;">
+      <a class="navbar-brand text-white fw-bolder fs-6" href="/">Wo<span style="color: rgb(7, 6, 6);">rk</span>It</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent"  style="float: right;">
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active text-white fw-bolder fs-6" aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white fw-bolder fs-6" href="about">About us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white fw-bolder fs-6" href="/viewpost">Jobs</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white fw-bolder fs-6" href="post-job">Post a job</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white fw-bolder fs-6" href="#">FAQs</a>
+          </li>
+          <button class="btn p-1 mb-1 fw-bold bg-white text-black" id="getStartedBtn">Get Started</button>
+          <!-- <li class="nav-item">
+            <a class="nav-link bg-white text-black fw-bolder fs-6" href="#" style="border-radius: 45px;">Get Started</a>
+          </li> -->
+        </ul>     
+      </div>
+    </div>
+  </nav>
+
+
+    <h1 style="text-align: center;">view all available jobs</h1>
+
+    <div class="container">
+     
+
+      <!-- iterate over blogs and display client entries -->
+      <% client.forEach(blog => { %>
+      <div class="client">
+        <div>
+          <div class="label">Name:</div>
+          <div class="data"><%= blog.name %></div>
+        </div>
+        <div>
+          <div class="label">Email:</div>
+          <div class="data"><%= blog.email %></div>
+        </div>
+        <div>
+          <div class="label">Category:</div>
+          <div class="data"><%= blog.category %></div>
+        </div>
+        <div>
+          <div class="label">description:</div>
+          <div class="data"><%= blog.job_description %></div>
+        </div>
+        <div>
+          <div class="label">created on:</div>
+          <div class="data"><%= blog.createdAt %></div>
+        </div>
+        <div>
+          <div class="label">updated on:</div>
+          <div class="data"><%= blog.updatedAt %></div>
+        </div>
+        <a href="/update_post?name=<%= blog.name %>">edit/update</a>
+      </div>
+      <% }); %>
+    </div>
+
+    <div class="footer">
+      <p>&copy; 2023 | WorkIt</p>
+    </div>
+
+
+
+<script src="js/bootstrap.bundle.js"></script>
+<script>
+  document.getElementById('getStartedBtn').addEventListener('click', function() {
+      window.location.href = '/login-or-create';
+  });
+</script>
+
+  </body>
+</html>

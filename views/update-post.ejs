@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('partials/header') %>
+  <head>
+    <title>update job</title>
+    <link rel="stylesheet" href="css/postJob.css"/>
+  </head>
+<body>
+  <%- include('partials/navbar') %>
+  
+  <h1 style="text-align: center;">update post</h1>
+
+    <form class="myForm" action="/update_post?name=<%= blog.name %>" method="post">
+      <input type="hidden" name="_method" value="PUT">
+      <input type="text"  name="name" class="username" value="<%= blog.name%>">
+      <input type="text" name="email" class="email" value="<%= blog.email%>">
+      <input type="text" name="category" class="num" value="<%= blog.category%>">
+      <input type="text" name="job_description" class="num" value="<%= blog.job_description%>">
+      <button type="submit" class="btn">submit</button>
+    </form>
+
+  <%- include('partials/footer') %>
+
+</body>
+</html>
