@@ -4,6 +4,7 @@
   "description": "A community for vendors to meet with customers",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Edozievip",
