@@ -10,7 +10,7 @@
   
   <h1 style="text-align: center;">update post</h1>
 
-    <form class="myForm" action="/update_post?name=<%= blog.name %>" method="post">
+    <form class="myForm" action="/update-post" method="post">
       <input type="hidden" name="_method" value="PUT">
       <input type="text"  name="name" class="username" value="<%= blog.name%>">
       <input type="text" name="email" class="email" value="<%= blog.email%>">

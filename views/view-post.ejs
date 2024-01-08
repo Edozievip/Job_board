@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>post blog</title>
+    <title>view jobs</title>
     <link rel="stylesheet" href="css/view.css" />
 
      <!-- bootstrap links -->
@@ -28,7 +28,7 @@
     <!-- nav section -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary pb-0">
     <div class="container-fluid pt-2 pb-2"  style="background-color: #4ac8fb;">
-      <a class="navbar-brand text-white fw-bolder fs-6" href="/">Wo<span style="color: rgb(7, 6, 6);">rk</span>It</a>
+      <a class="navbar-brand text-white fw-bolder" href="/" style="font-size: 2.0rem;">Wo<span style="color: rgb(7, 6, 6);">rk</span>It</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -41,18 +41,22 @@
             <a class="nav-link text-white fw-bolder fs-6" href="about">About us</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white fw-bolder fs-6" href="/viewpost">Jobs</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link text-white fw-bolder fs-6" href="post-job">Post a job</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link text-white fw-bolder fs-6" href="/viewpost">Jobs</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white fw-bolder fs-6" href="/single-view">view category</a>
+          </li>
+          
+          <li class="nav-item">
             <a class="nav-link text-white fw-bolder fs-6" href="#">FAQs</a>
           </li>
-          <button class="btn p-1 mb-1 fw-bold bg-white text-black" id="getStartedBtn">Get Started</button>
-          <!-- <li class="nav-item">
-            <a class="nav-link bg-white text-black fw-bolder fs-6" href="#" style="border-radius: 45px;">Get Started</a>
-          </li> -->
+          <!-- <button class="btn p-1 mb-1 fw-bold bg-white text-black" id="getStartedBtn">Get Started</button> -->
+          <li class="nav-item">
+            <a class="nav-link bg-white text-center text-black fw-bolder fs-6" href="/login" style="border-radius: 45px;">Get Started</a>
+          </li>
         </ul>     
       </div>
     </div>
@@ -61,9 +65,9 @@
 
     <h1 style="text-align: center;">view all available jobs</h1>
 
-    <div class="container">
-     
+    <div class="container">     
 
+      <% if (client && client.length > 0) { %>
       <!-- iterate over blogs and display client entries -->
       <% client.forEach(blog => { %>
       <div class="client">
@@ -91,7 +95,8 @@
           <div class="label">updated on:</div>
           <div class="data"><%= blog.updatedAt %></div>
         </div>
-        <a href="/update_post?name=<%= blog.name %>">edit/update</a>
+        <a href="/update-post?name=<%= blog.name %>">edit/update</a>
+        <a href="/delete-post/<%= blog._id %>" class="deleteBtn" style="color: red; background-color: #fff; padding: .2rem; border-radius: .3rem;" data-delete="<%= blog._id %>">delete</a>
       </div>
       <% }); %>
     </div>
@@ -100,12 +105,29 @@
       <p>&copy; 2023 | WorkIt</p>
     </div>
 
+    <% } else { %>
+      <p class="no-blog-message">No available job.</p>
+    <% } %>
+
 
 
 <script src="js/bootstrap.bundle.js"></script>
 <script>
   document.getElementById('getStartedBtn').addEventListener('click', function() {
-      window.location.href = '/login-or-create';
+      window.location.href = '/login';
+  });
+
+  const deleteBtn = document.querySelector('.deleteBtn');
+  deleteBtn.addEventListener('click', (e) => {
+  fetch(`/delete-post/${deleteBtn.dataset.delete}`, {
+    method: 'DELETE'
+  })
+  .then((response) => response.json())
+  .then( (data) => {
+    console.log(data);
+    window.location.href = data.message.redirect;
+  })
+  .catch( (error) => console.log(error));
   });
 </script>
 

@@ -1,151 +1,125 @@
 const express = require("express");
+// require("dotenv").config();
 const ejs = require("ejs");
-const db = require("./database/db");
-// const Client = require('./models/postJob');
-const PostJobModels = require("./models/postJob");
+// const session = require("express-session");
+// const bcrypt = require("bcrypt");
+// const passport = require("passport");
+// const LocalStrategy = require("passport-local").Strategy;
+// const crypto = require("crypto");
+// const flash = require("express-flash");
+const methodOverride = require('method-override');
+const {connectDb} = require("./database/db");
+// const User = require("./models/userModel");
+const blogRoutes = require("./routes/blogRoutes");
 
+
+
+// const generateSecretKey = () => {
+//   return crypto.randomBytes(32).toString("hex");
+// };
+
+// function isAuthenticated(req, res, next) {
+//   if (req.isAuthenticated()) {
+//     return next();
+//   }
+//   res.redirect('/login');
+// }
+
+// const port = process.env.PORT;
 const app = express();
 const port = 5000;
+// const secretKey = generateSecretKey();
+
 
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(blogRoutes)
+
+// app.use(session({
+//   secret: secretKey,
+//   resave: true,
+//   saveUninitialized: true
+// }));
+// app.use(passport.initialize());
+// app.use(passport.session());
+// app.use(flash());
 app.set("view engine", "ejs");
 app.use(express.static("public"));
+app.use(methodOverride('_method'));
 
-// START GET FILES
-app.get("/", (req, res) => {
-  res.render("home");
-});
+  // passport config
+  // passport.use(new LocalStrategy((email, password, done) => {
+  //   User.findOne({ email: email }, (err, user) => {
+  //     if (err) return done(err.message);
+  //     if (!user) return done(null, false, { message: 'Incorrect username.' });
 
-app.get("/about", (req, res) => {
-  res.render("about");
-});
+  //     bcrypt.compare(password, user.password, (err, res) => {
+  //       if (err) return done(err.message);
+  //       if (!res) return done(null, false, { message: 'Incorrect password.' });
 
-app.get("/post-job", (req, res) => {
-  try {
-    res.status(200).render("post-job");
-  } catch (err) {
-    console.log(err.message);
-  }
-});
+  //       return done(null, user);
+  //     });
+  //   });
+  // }));
 
-app.get("/viewpost", async (req, res) => {
-  try {
-    const client = await PostJobModels.find().sort({ createdAt: -1 });
-    // console.log(blogs);
-    res.status(200).render("view-post", { client });
-  } catch (err) {
-    console.log(err.message);
-  }
-});
 
-app.get("/update_post", async (req, res) => {
-  try {
-    const { name } = req.query;
-    console.log(name);
+  // passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
+  //   try {
+  //     const user = await User.findOne({ email });
 
-    const blog = await PostJobModels.findOne({ name });
+  //     if (!user) {
+  //       console.log('User not found');
+  //       return done(null, false, { message: 'Incorrect email.' });
+  //     }
 
-    console.log(blog);
-    res.status(200).render("update-post", { blog, query: { name } });
-  } catch (err) {
-    console.log(err.message);
-  }
-});
-// END GET FILES
+  //     const passwordMatch = await bcrypt.compare(password, user.password);
 
-// START CREATE POST
-// app.post('/post', async (req, res) => {
-//     try {
-//       const client = new PostJobModels(req.body);
-//   // console.log(client);
+  //     if (!passwordMatch) {
+  //       console.log('incorrect password');
 
-//       await client.save();
-//     //   res.render('success')
-//       res.status(200).redirect('/');
-//     } catch (err) {
-//       console.log(err.message);
-//     }
-//   });
+  //       return done(null, false, { message: 'Incorrect password.' });
+  //     }
 
-app.post("/post", async (req, res) => {
-  try {
-    if (req.body) {
-      const client = new PostJobModels(req.body);
-      // console.log(client);
+  //     return done(null, user);
+  //   } catch (error) {
+  //     return done(error);
+  //   }
+  // }));
 
-      await client.save();
-      res.render("success");
-      res.status(200).redirect("/view-post");
-    } else {
-      res.send("error");
-      res.status(500).redirect("/");
+
+
+  // passport.serializeUser((user, done) => {
+  //   done(null, user.id);
+  // });
+
+  // passport.deserializeUser((id, done) => {
+  //   // User.findById(id, (err, user) => {
+  //   //   done(err, user);
+  //   User.findById(id)
+  //     .exec()
+  //     .then((user) => {
+  //       done(null, user);
+  //     })
+  //     .catch((err) => {
+  //       done(err);
+  //   });
+  // });
+
+
+
+
+
+
+
+
+  // creating a connection to the database and starting the server
+  (async function () {
+    try {
+      await connectDb();
+      app.listen(port, () => console.log(`Server listening on port ${port}!`));
+    } catch (err) {
+      console.log(err.message);
     }
-  } catch (err) {
-    console.log(err.message);
-  }
-});
-
-// edit post
-app.post("/update_post", async (req, res) => {
-  try {
-    const { name } = req.query;
-    const updateclient = await PostJobModels.findOneAndUpdate(
-      { name },
-      req.body
-    );
-    // updateclient.save();
-
-    res.render("success");
-  } catch (err) {
-    console.log(err.message);
-  }
-});
-// END CREATE POST
-
-
-// login/createAccount start
-
-
-app.get('/create-account', (req, res) => {
-  try {
-    res.render('createAccount');
-  }
-  catch (err) {
-    console.log(err.message);
-  }
-});
-
-app.post('/create-account', (req, res) => {
-  const { name, email, password } = req.body;
-  // Implement account creation logic here using name, email, and password
-  users.push({ name, email, password });
-  res.send('Account created successfully');
-});
-
-app.get('/login-or-create', (req, res) => {
-  try {
-    res.render('loginOrCreate');
-  }
-  catch (err) {
-    console.log(err.message);
-  }
-  res.render('');
-});
-// login/createAccount stop
-
-// creating a connection to the database and starting the server
-async function connectDbs() {
-  try {
-    await db;
-    console.log("Connected to MongoDB!");
-
-    app.listen(port, () => {
-      console.log(`Server listening on port ${port}!`);
-    });
-  } catch (err) {
-    console.log(err);
-  }
-}
-connectDbs();
+    
+  }) ();
